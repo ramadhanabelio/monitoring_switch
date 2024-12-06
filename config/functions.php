@@ -36,6 +36,30 @@ function insert_switch($name, $ip_address, $area, $status = 'up')
     return execute_query($query);
 }
 
+function get_months_years_from_switches()
+{
+    global $conn;
+
+    $query = "SELECT DISTINCT DATE_FORMAT(created_at, '%M %Y') AS month_year 
+              FROM switch ORDER BY created_at DESC";
+    $result = execute_query($query);
+
+    $months_years = [];
+    while ($row = mysqli_fetch_assoc($result)) {
+        $months_years[] = $row['month_year'];
+    }
+
+    return $months_years;
+}
+
+function get_switches_by_month_year($month_year)
+{
+    global $conn;
+
+    $query = "SELECT * FROM switch WHERE DATE_FORMAT(created_at, '%M %Y') = '$month_year'";
+    return execute_query($query);
+}
+
 function get_all_switches()
 {
     $query = "SELECT * FROM switch";
